@@ -39,7 +39,7 @@ for root, subdirs, files in os.walk(src):
                 raise SyntaxError(".md file must begin with a # marked title!")
             name = h1s[1].split("\n",1)[0]
             p[''].append([os.path.join(root[lensrc:],file.replace(".md","")).replace("\\","/"),name])
-            documentlist.append("/wiki/"+fpath[len(src):].replace(".md",".html").replace("\\","/"))
+            documentlist.append("/btbrel/"+fpath[len(src):].replace(".md",".html").replace("\\","/"))
             namelist.append(name)
 
 def IterateFileTree(filedict,path,parentexpanded):
@@ -63,7 +63,7 @@ def IterateFileTree(filedict,path,parentexpanded):
                 if file[0] == currentfile:
                     filetree += f"<li class=\"sidebar\"><b>{file[1]}</b></li>\n"
                 else:
-                    filetree += f"<li class=\"sidebar\"><a href=\"/wiki/{file[0]}.html\">{file[1]}</a></li>\n"
+                    filetree += f"<li class=\"sidebar\"><a href=\"/btbrel/{file[0]}.html\">{file[1]}</a></li>\n"
 
 def FindFile(name):
     for root, subdirs, files in os.walk(src):
@@ -130,12 +130,12 @@ def ConvertStrToHtml(rawmarkdown : str):
     links = re.findall(r'\[\[[^\[^\]]+\]\]', rawmarkdown)
     for link in links:
         if os.path.exists(os.path.join(src,link[2:-2]+".md")):
-            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/wiki/"+link[2:-2]+".html\">"+link[2:-2].split("/")[-1]+"</a>")
+            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/btbrel/"+link[2:-2]+".html\">"+link[2:-2].split("/")[-1]+"</a>")
         elif os.path.exists(os.path.join(src,link[2:-2]+"/index.md")):
-            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/wiki/"+link[2:-2]+"\">"+link[2:-2].split("/")[-1]+"</a>")
+            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/btbrel/"+link[2:-2]+"\">"+link[2:-2].split("/")[-1]+"</a>")
         else:
             foundpath = FindFile(link[2:-2]+".md").replace(".md","").replace("\\","/")
-            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/wiki/"+foundpath+".html\">"+foundpath.split("/")[-1]+"</a>")
+            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/btbrel/"+foundpath+".html\">"+foundpath.split("/")[-1]+"</a>")
     embeds = re.findall(r'\{\{[^\{\}]+?\}\}', rawmarkdown,re.MULTILINE)
     for embed in embeds:
         path_and_args = embed[2:-2].split("|")
@@ -160,10 +160,10 @@ def ConvertStrToHtml(rawmarkdown : str):
         if(href.startswith("http://") or href.startswith("https://")):
             rawmarkdown = rawmarkdown.replace(link, "<a href=\""+href+"\">"+name+"</a>")
         elif os.path.exists(os.path.join(src,href+".md")):
-            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/wiki/"+href+".html\">"+name+"</a>")
+            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/btbrel/"+href+".html\">"+name+"</a>")
         else:
             foundpath = FindFile(href+".md").replace(".md","").replace("\\","/")
-            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/wiki/"+foundpath+".html\">"+name+"</a>")
+            rawmarkdown = rawmarkdown.replace(link, "<a href=\"/btbrel/"+foundpath+".html\">"+name+"</a>")
     converted = mark.convert(rawmarkdown)
     return converted
 
